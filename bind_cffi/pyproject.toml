@@ -1,0 +1,26 @@
+[project]
+name = "bind_cffi"
+version = "0.1.0"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = ["cffi>=1.17.1"]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+# packages = ["traditional"]
+# https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html
+# platforms = ["Linux", "Windows"]
+# include-package-data = true
+# headers = ["header.h"]
+ext-modules = [
+    { name = "_rs_stat", sources = [
+        "_cffi.c",
+        # ], include-dirs = [
+        #     "src/traditional",
+    ], libraries = ["bind_c"], library-dirs = ["src/bind_cffi"] },
+]
+packages.find.where = ["src"]
+package-data.bind_cffi = ["*.h", "*.a"]

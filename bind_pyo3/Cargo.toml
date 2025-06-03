@@ -1,0 +1,11 @@
+[package]
+name = "bind_pyo3"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.25.0", features = ["extension-module"] }
+statistics = { version = "0.1.0", path = "../statistics" }

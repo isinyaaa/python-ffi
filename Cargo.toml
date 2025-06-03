@@ -1,0 +1,3 @@
+[workspace]
+resolver = "3"
+members = ["bind_c", "bind_pyo3", "statistics", "simple"]

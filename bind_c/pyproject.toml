@@ -1,0 +1,12 @@
+[build-system]
+requires = ["maturin>=1.8,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "bind_maturin_cffi"
+requires-python = ">=3.8"
+dynamic = ["version"]
+dependencies = ["cffi"]
+
+[tool.maturin]
+bindings = "cffi"

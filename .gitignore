@@ -1,0 +1,12 @@
+build
+dist
+target
+/gen
+*.egg-info
+*.so
+*.a
+*.txt
+/.ipynb_checkpoints
+/results
+/output.files
+/output.log
