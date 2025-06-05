@@ -72,7 +72,10 @@ class NPWrap:
         return self.data.std()
 
 
-numpy = {"numpy": BenchImpl(lambda d: (np.array(d),), np.mean, np.std)}
+ref = {
+    "nparray": BenchImpl(lambda d: (np.array(d),), np.mean, np.std),
+    "numpy": BenchImpl(lambda d: (d,), np.mean, np.std),
+}
 
 ctypes_impls = {
     "slow": BenchImpl(lambda d: (d,), ctypes_mean, ctypes_stddev),
@@ -84,13 +87,13 @@ ctypes_impls = {
 }
 
 slow_impls = {
-    "cffi": BenchImpl(lambda d: (d, len(d)), cffi.mean, cffi.stddev),
+    "setuptools": BenchImpl(lambda d: (d, len(d)), cffi.mean, cffi.stddev),
     "maturin": BenchImpl(lambda d: (d, len(d)), maturin.mean, maturin.stddev),
     "pyo3": BenchImpl(lambda d: (d,), pyo.mean, pyo.stddev),
 }
 
 fast_impls = {
-    "cffi": BenchImpl(
+    "setuptools": BenchImpl(
         lambda d: (cffi.array_init(d, len(d)),), cffi.array_mean, cffi.array_stddev
     ),
     "maturin": BenchImpl(
@@ -99,6 +102,16 @@ fast_impls = {
         maturin.array_stddev,
     ),
     "pyo3": BenchImpl.for_cls(pyo.Array),
+}
+
+fastest_impls = {
+    # "maturin": BenchImpl(
+    #     lambda d: (maturin.array_init(d, len(d)),),
+    #     maturin.array_mean,
+    #     maturin.array_stddev,
+    # ),
+    "pyo3": BenchImpl.for_cls(pyo.Array),
+    "numpy": BenchImpl(lambda d: (np.array(d),), np.mean, np.std),
 }
 
 
@@ -165,14 +178,19 @@ if __name__ == "__main__":
             json.dumps(std_results)
         )
 
-    exp_range = [2**e for e in range(12, int(math.log2(length)))]
-
-    irun(exp_range, ctypes_impls, "aligned_ctypes")
-
-    irun(exp_range, slow_impls, "aligned_slow")
-    irun(exp_range, fast_impls, "aligned_fast")
-
-    irun((2**12 + off for off in range(-5, 6)), fast_impls, "unaligned_fast")
-
+    # serial runs
+    irun((length,), ctypes_impls, "ctypes")
+    irun((length,), slow_impls, "serial_slow")
     irun((length,), fast_impls, "serial_fast")
-    irun((length,), numpy, "reference")
+    irun((length,), ref, "serial_reference")
+
+    # aligned runs
+    irun(
+        (int(2 ** (e / 2 + 10)) for e in range(2 * (int(math.log2(length)) - 10))),
+        fastest_impls,
+        "mixed",
+    )
+
+    # unaligned runs
+    # irun(range(2**11 - 5, 2**12 + 5), fast_impls, "unaligned_fast")
+    # irun(range(2**11 - 1024, 2**18 + 1025, 1024), fastest_impls, "unaligned")
