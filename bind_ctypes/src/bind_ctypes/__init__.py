@@ -1,4 +1,5 @@
 import ctypes as c
+import sys
 import typing as t
 from pathlib import Path
 
@@ -7,8 +8,13 @@ f64 = c.c_double
 f64_p = c.POINTER(f64)
 Array = tuple[f64_p, u64]
 
+if sys.platform.lower() == "darwin":
+    ext = "dylib"
+else:
+    ext = "so"
 
-lib = c.CDLL(Path(__file__).parent / "libbind_c.so")
+
+lib = c.CDLL(Path(__file__).parent / f"libbind_c.{ext}")
 lib.mean.restype = f64
 lib.mean.argtypes = [f64_p, u64]
 lib.stddev.restype = f64

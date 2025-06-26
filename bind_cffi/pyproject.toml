@@ -23,4 +23,4 @@ ext-modules = [
     ], libraries = ["bind_c"], library-dirs = ["src/bind_cffi"] },
 ]
 packages.find.where = ["src"]
-package-data.bind_cffi = ["*.h", "*.a"]
+package-data.bind_cffi = ["*.h", "*.a", "*.dylib", "*.so"]

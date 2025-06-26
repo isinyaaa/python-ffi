@@ -5,6 +5,8 @@ target
 *.egg-info
 *.so
 *.a
+*.d
+*.dylib
 *.txt
 /.ipynb_checkpoints
 /results
