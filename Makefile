@@ -1,4 +1,4 @@
-repro: clean build bench nb-setup nb
+repro: clean build bench nb-setup nb pdf
 
 UNAME_S := $()
 
@@ -56,6 +56,11 @@ nb-server: .venv
 build-generator: gen
 gen:
 	odin build gen.odin -file -o:speed
+
+pdf:
+	typst compile main.typ main.pdf
+	gs -sDEVICE=pdfwrite -dPDFSETTINGS=/default -dQUIET -dNOPAUSE -dBATCH -dDetectDuplicateImages -sOutputFile=paper.pdf main.pdf
+	@rm main.pdf
 
 clean:
 	cargo clean
