@@ -120,7 +120,7 @@ def get_stat(nst):
     return np.mean(mst), np.std(mst)
 
 
-EXPERIMENTS = 5
+EXPERIMENTS = 10
 
 if __name__ == "__main__":
     import json
